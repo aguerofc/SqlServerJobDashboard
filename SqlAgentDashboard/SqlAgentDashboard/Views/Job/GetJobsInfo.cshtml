@@ -1,0 +1,93 @@
+﻿@model IEnumerable<JobViewModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Información General Jobs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add any additional CSS stylesheets here -->
+</head>
+<body>
+
+  @*   <table class="table">
+        <thead>
+            <tr>
+                <th>JobId</th>
+                <th>JobName</th>
+                <th>LastRunDateTime</th>
+                <th>LastRunStatus</th>
+                <th>LastRunDuration</th>
+                <th>LastRunStatusMessage</th>
+                <th>NextRunDateTime</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in Model)
+            {
+                <tr>
+                    <td>@job.JobId</td>
+                    <td>@job.JobName</td>
+                    <td>@job.LastRunDateTime</td>
+                    <td>@job.LastRunStatus</td>
+                    <td>@job.LastRunDuration</td>
+                    <td>@job.LastRunStatusMessage</td>
+                    <td>@job.NextRunDateTime</td>
+                    <td>
+                        <form method="post" action="@Url.Action("ExecuteJob", "Job")">
+                            <input type="hidden" name="jobName" value="@job.JobName" />
+                            <button type="submit" class="btn btn-primary">Execute</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table> *@
+
+    <div class="container mt-5">
+        <h1 class="mb-4">SQL Server Jobs</h1>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>JobId</th>
+                    <th>JobName</th>
+                    <th>LastRunDateTime</th>
+                    <th>LastRunStatus</th>
+                    <th>LastRunDuration</th>
+                    <th>LastRunStatusMessage</th>
+                    <th>NextRunDateTime</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model)
+                {
+                    <tr class="@GetRowClass(job.LastRunStatus)">
+                        <td>@job.JobId</td>
+                        <td>@job.JobName</td>
+                        <td>@job.LastRunDateTime</td>
+                        <td>@job.LastRunStatus</td>
+                        <td>@job.LastRunDuration</td>
+                        <td>@job.LastRunStatusMessage</td>
+                        <td>@job.NextRunDateTime</td>
+                        <td>
+                            <form method="post" action="@Url.Action("ExecuteJob", "Job")">
+                                <input type="hidden" name="jobName" value="@job.JobName" />
+                                <button type="submit" class="btn btn-primary">Execute</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @functions {
+        // Helper method to get CSS class based on job status
+        string GetRowClass(string status)
+        {
+            return status == "Failed" ? "table-danger" : string.Empty;
+        }
+    }
+
+</body>
+</html>
