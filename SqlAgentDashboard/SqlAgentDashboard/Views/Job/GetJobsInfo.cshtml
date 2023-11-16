@@ -5,43 +5,10 @@
 <head>
     <title>Información General Jobs</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
     <!-- Add any additional CSS stylesheets here -->
 </head>
 <body>
-
-  @*   <table class="table">
-        <thead>
-            <tr>
-                <th>JobId</th>
-                <th>JobName</th>
-                <th>LastRunDateTime</th>
-                <th>LastRunStatus</th>
-                <th>LastRunDuration</th>
-                <th>LastRunStatusMessage</th>
-                <th>NextRunDateTime</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var job in Model)
-            {
-                <tr>
-                    <td>@job.JobId</td>
-                    <td>@job.JobName</td>
-                    <td>@job.LastRunDateTime</td>
-                    <td>@job.LastRunStatus</td>
-                    <td>@job.LastRunDuration</td>
-                    <td>@job.LastRunStatusMessage</td>
-                    <td>@job.NextRunDateTime</td>
-                    <td>
-                        <form method="post" action="@Url.Action("ExecuteJob", "Job")">
-                            <input type="hidden" name="jobName" value="@job.JobName" />
-                            <button type="submit" class="btn btn-primary">Execute</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table> *@
 
     <div class="container mt-5">
         <h1 class="mb-4">SQL Server Jobs</h1>
@@ -70,10 +37,7 @@
                         <td>@job.LastRunStatusMessage</td>
                         <td>@job.NextRunDateTime</td>
                         <td>
-                            <form method="post" action="@Url.Action("ExecuteJob", "Job")">
-                                <input type="hidden" name="jobName" value="@job.JobName" />
-                                <button type="submit" class="btn btn-primary">Execute</button>
-                            </form>
+                           <button onclick="executeJob('@job.JobName')" class="btn btn-primary">Execute</button>
                         </td>
                     </tr>
                 }
@@ -87,7 +51,54 @@
         {
             return status == "Failed" ? "table-danger" : string.Empty;
         }
-    }
+    }  
 
+    <script>
+        function executeJob(jobName) {
+            // Disable the button to prevent multiple executions
+            $('button').prop('disabled', true);
+
+            // Call the server to execute the job asynchronously
+            $.ajax({
+                url: '/Job/ExecuteJob',
+                type: 'POST',
+                data: { jobName: jobName },
+                success: function (result) {
+                    // Enable the button after execution
+                    $('button').prop('disabled', false);
+
+                    // Display SweetAlert message based on the result
+                    if (result.success) {
+                        swal({
+                            title: "Success",
+                            text: "Job executed successfully!",
+                            icon: "success"
+                        }).then(function () {
+                            // Redirect to the Index action
+                            window.location.href = '/Job/GetJobsInfo';
+                        });
+                    } else {
+                        swal({
+                            title: "Error",
+                            text: "Job execution failed!",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function () {
+                    // Enable the button on error
+                    $('button').prop('disabled', false);
+
+                    // Display SweetAlert for unexpected errors
+                    swal({
+                        title: "Error",
+                        text: "An unexpected error occurred.",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>
+

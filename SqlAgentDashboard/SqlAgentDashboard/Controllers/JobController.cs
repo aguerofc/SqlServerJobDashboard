@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SqlAgentDashboard.Models;
 using SqlAgentDashboard.Services;
 
@@ -23,11 +24,11 @@ namespace ActiveDirectoryWebApp.Controllers
             return View(jobs);
         }
 
-
         /// <summary>
         /// Get job  information
         /// </summary>
         /// <returns>Job view model</returns>
+        //[Authorize(Policy = "FascrJobAdmin")]
         public async Task<IActionResult> GetJobsInfo()
         {
             try
@@ -56,8 +57,27 @@ namespace ActiveDirectoryWebApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Exceute job by name
+        /// </summary>
+        /// <param name="jobName">Job name</param>
+        /// <returns>Result of execution</returns>
         [HttpPost]
         public async Task<IActionResult> ExecuteJob(string jobName)
+        {
+            bool isJobSuccessful = await ExecuteSqlJobAsync(jobName);
+
+            // Return JSON result indicating success or failure
+            return Json(new { success = isJobSuccessful });           
+
+        }
+
+        /// <summary>
+        /// Execute async sql job
+        /// </summary>
+        /// <param name="jobName">Job name</param>
+        /// <returns>Result of the operation</returns>
+        private async Task<bool>  ExecuteSqlJobAsync(string jobName)
         {
             try
             {
@@ -65,12 +85,12 @@ namespace ActiveDirectoryWebApp.Controllers
 
                 if (status != 1)
                 {
-                    return RedirectToAction("GetJobsInfo"); 
+                    return true;
 
                 }
                 else
                 {
-                    return NotFound();
+                    return false;
                 }
 
             }
@@ -81,9 +101,8 @@ namespace ActiveDirectoryWebApp.Controllers
                     RequestId = HttpContext.TraceIdentifier,
                     Message = ex.Message,
                 };
-                return View("Error", errorViewModel); // StatusCode(500, ex.Message); // Handle exceptions
+                return false;// View("Error", errorViewModel); // StatusCode(500, ex.Message); // Handle exceptions
             }
-            
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SqlAgentDashboard.Services
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                return connection.Query<JobViewModel>("dbo.GetJobFlowStatus", commandType: CommandType.StoredProcedure).ToList();
+                return connection.Query<JobViewModel>("dbo.ETLGetJobFlowStatus", commandType: CommandType.StoredProcedure).ToList();
             }
         }
 
