@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.AspNetCore.Authorization;
 using SqlAgentDashboard.Handlers;
 using SqlAgentDashboard.Services;
 
@@ -21,19 +21,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
    .AddNegotiate();
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("RequireSpecificGroup", policy =>
-//        policy.Requirements.Add(new ActiveDirectoryGroupRequirement("FascrJobAdmin")));
-//});
+builder.Services.AddSingleton<IClaimsTransformation, ClaimsTransformer>();
 
-//builder.Services.AddSingleton<IAuthorizationHandler, ActiveDirectoryGroupAuthorizationHandler>();
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    // By default, all incoming requests will be authorized according to the default policy.
-//    options.FallbackPolicy = options.DefaultPolicy;
-//});
+builder.Services.AddAuthorization(options =>
+{
+    // By default, all incoming requests will be authorized according to the default policy.
+    options.FallbackPolicy = options.DefaultPolicy;
+});
 
 
 builder.Services.AddRazorPages();

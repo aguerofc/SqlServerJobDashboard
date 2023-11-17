@@ -31,10 +31,22 @@ namespace ActiveDirectoryWebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-       
+       /// <summary>
+       /// Logout action
+       /// </summary>
+       /// <returns></returns>
         public  IActionResult Logout()
         {
             
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            //// Redirect to a page or action after "logging out"
+            return View();
+        }
+
+        public IActionResult Unauthorize()
+        {
+
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             //// Redirect to a page or action after "logging out"

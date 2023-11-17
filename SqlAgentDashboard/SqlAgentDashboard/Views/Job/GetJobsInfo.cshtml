@@ -11,7 +11,7 @@
 <body>
 
     <div class="container mt-5">
-        <h1 class="mb-4">SQL Server Jobs</h1>
+        <h1 class="mb-4">SQL Server Jobs</h1>        
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -43,6 +43,7 @@
                 }
             </tbody>
         </table>
+        <button onclick="refreshTable()" class="btn btn-primary">Refresh Grid</button>
     </div>
 
     @functions {
@@ -51,7 +52,7 @@
         {
             return status == "Failed" ? "table-danger" : string.Empty;
         }
-    }  
+    }     
 
     <script>
         function executeJob(jobName) {
@@ -98,6 +99,12 @@
                 }
             });
         }
+
+        function refreshTable() {           
+                window.location.href = '/Job/GetJobsInfo';           
+        }
+
+        
     </script>
 </body>
 </html>

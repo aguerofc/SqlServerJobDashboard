@@ -15,6 +15,10 @@ namespace SqlAgentDashboard.Services
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Get list of sql jobs
+        /// </summary>
+        /// <returns>List of jobs</returns>
         public async Task<IEnumerable<JobViewModel>>  GetJobs()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -24,6 +28,11 @@ namespace SqlAgentDashboard.Services
             }
         }
 
+        /// <summary>
+        /// Execute job by name
+        /// </summary>
+        /// <param name="name">Job name</param>
+        /// <returns>Job execution</returns>
         public async Task<int> ExecuteJob(string name)
         {
             using (var connection = new SqlConnection(_connectionString))

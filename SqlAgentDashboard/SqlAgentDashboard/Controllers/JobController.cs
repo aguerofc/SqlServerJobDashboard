@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SqlAgentDashboard.Handlers;
 using SqlAgentDashboard.Models;
 using SqlAgentDashboard.Services;
 
@@ -28,7 +29,7 @@ namespace ActiveDirectoryWebApp.Controllers
         /// Get job  information
         /// </summary>
         /// <returns>Job view model</returns>
-        //[Authorize(Policy = "FascrJobAdmin")]
+        [Authorize(Roles = "FascrJobAdmin")]        
         public async Task<IActionResult> GetJobsInfo()
         {
             try
